@@ -1,0 +1,26 @@
+@import "ag-grid-community/styles/ag-theme-quartz.css"; /* Import the original quartz theme */
+
+.ag-theme-quartz {
+  --ag-header-cell-background: rgb(206, 218, 250);
+  --ag-cell-horizontal-border: var(--ag-row-border-width)
+  var(--ag-row-border-style) var(--ag-row-border-color); /* Add left and right borders to each cell and use row border's properties  */
+--ag-header-column-separator-display: block;
+--ag-header-cell-background: #4CAF50;
+--ag-odd-row-background-color: #f3f4f5f5;
+--ag-header-background-color: #d6e0f5;
+--ag-header-cell-text-color: #000000;
+}
+
+
+.ag-theme-quartz-dark {
+  --ag-cell-horizontal-border: var(--ag-row-border-width)
+  var(--ag-row-border-style) var(--ag-row-border-color); /* Add left and right borders to each cell and use row border's properties  */
+--ag-header-column-separator-display: block;
+--ag-odd-row-background-color: #151c22f5;
+}
+/*  */
+
+.ag-theme-quartz .ag-row .ag-cell:first-child {
+  background-color: #d6e0f5 !important; /* Blue background for the first column */
+  border-left: 2px solid #003a79; 
+}
