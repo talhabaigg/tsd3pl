@@ -58,7 +58,8 @@ interface IssuesProps {
 }
 
 export default function Dashboard() {
-  const { issues, auth } = usePage().props;
+  const { issues, auth, issue_types } = usePage().props;
+  console.log(issue_types);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [selectedRow, setSelectedRow] = useState<Issue | null>(null);
   const [open, setOpen] = React.useState(false);
@@ -73,13 +74,17 @@ export default function Dashboard() {
   const moveForm = useForm({ status: "" });
   const isAdmin = auth.user?.isAdmin;
 
-  const typeList = [
-    { value: "it_hardware", label: "IT Hardware" },
-    { value: "product_quality", label: "Product Quality" },
-    { value: "it_applications", label: "IT Applications" },
-    { value: "warehouse_operations", label: "Warehouse Operations" },
-    { value: "safety", label: "Safety" },
-  ];
+  const typeList = issue_types.map((type) => ({
+    value: type.name,
+    label: type.name,
+  }));
+  // const typeList = [
+  //   { value: "it_hardware", label: "IT Hardware" },
+  //   { value: "product_quality", label: "Product Quality" },
+  //   { value: "it_applications", label: "IT Applications" },
+  //   { value: "warehouse_operations", label: "Warehouse Operations" },
+  //   { value: "safety", label: "Safety" },
+  // ];
   const statusList = [
     { value: "active", label: "Active" },
     { value: "pending", label: "Pending" },

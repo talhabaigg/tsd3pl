@@ -4,6 +4,7 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarMenu,
+  SidebarMenuItem,
   SidebarMenuButton,
   SidebarGroupLabel,
 } from "../components/ui/sidebar";
@@ -20,13 +21,21 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" >
       <SidebarHeader>
-        <SidebarGroupLabel>
-          <Link href={route("dashboard")}>
-            <ApplicationLogo />
-          </Link>
-        </SidebarGroupLabel>
+      <SidebarMenu>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton size="lg" className="flex justify-center" asChild>
+                          <Link href={route("dashboard")} >
+                          <div className="mr-2">
+                            <ApplicationLogo  />
+                          </div>
+                          
+                          </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                </SidebarMenu>
+       
       </SidebarHeader>
       <SidebarContent className="px-2">
         {/* <SidebarMenuButton

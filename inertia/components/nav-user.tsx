@@ -99,7 +99,17 @@ export function NavUser({
                     </DropdownMenuItem>
                   </Link>
                 </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <Link href={route("issue-categories.index")}>
+                    <DropdownMenuItem>
+                      <User />
+                      Manage Issue Categories
+                    </DropdownMenuItem>
+                  </Link>
+                </DropdownMenuGroup>
               </>
+              
             )}
            
             <DropdownMenuSeparator />

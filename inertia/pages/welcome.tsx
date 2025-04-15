@@ -32,10 +32,10 @@ export default function Welcome({
     <>
       <Head title="Welcome" />
       <div
-        className="relative min-h-screen bg-cover bg-center text-black/50 dark:bg-black dark:text-white/50"
-        style={{ backgroundImage: "url('/bg_1.jpg')" }}
+        className="relative min-h-screen bg-gray-900  text-black/50  "
+        
       >
-        <header className="grid grid-cols-2 items-center gap-2 py-10 lg:grid-cols-3 bg-gray-50 px-6">
+        <header className="grid grid-cols-2 items-center gap-2 py-5 lg:grid-cols-3 bg-black px-6">
           <div className="flex lg:col-start-2 lg:justify-center ">
             <ApplicationLogo className="w-16 h-16" />
           </div>
@@ -51,16 +51,16 @@ export default function Welcome({
               <>
                 <Link
                   href={route("login")}
-                  className="rounded-md px-3 py-2  text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                  className="rounded-md px-3 py-2  text-gray-200 ring-1 ring-transparent transition hover:text-gray-300 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
                 >
-                  Log in to access Issues log
+                  Log in
                 </Link>
-                {/* <Link
+                <Link
                   href={route("register")}
-                  className="rounded-md px-3 py-2  text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                  className="rounded-md px-3 py-2  text-gray-200 ring-1 ring-transparent transition hover:text-gray-300  focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
                 >
                   Register
-                </Link> */}
+                </Link>
               </>
             )}
           </nav>
@@ -102,7 +102,7 @@ export default function Welcome({
                   {!flash.success && !loading && (
                     <div className="px-2 sm:px-0">
                       <h2 className="text-white font-bold text-left text-2xl">
-                        REPORT A COMPANY ISSUE
+                        REPORT ISSUE TO ROQ
                       </h2>
                       <div className="bg-gray-50 p-4 rounded-2xl shadow-2xl ">
                         <IssueForm issue={null} loggedIn={isLoggedIn} />
@@ -113,7 +113,7 @@ export default function Welcome({
               </div>
             </main>
 
-            <footer className="py-16 text-center text-sm text-black dark:text-white/70">
+            <footer className="py-16 text-center text-sm text-gray-200 dark:text-white/70">
               By Telp. Built with React and Laravel v{laravelVersion} (PHP v
               {phpVersion})
             </footer>

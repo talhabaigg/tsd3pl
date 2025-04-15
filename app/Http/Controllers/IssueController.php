@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use App\Notifications\AssignedIssueNotification;
 use Illuminate\Support\Facades\Log;
+use App\Models\IssueCategory;
 class IssueController extends Controller
 {
     /**
@@ -31,11 +32,14 @@ class IssueController extends Controller
         $issuesQuery->where('created_by', $user->id);
     }
 
+    $issue_types = IssueCategory::all();
+
     $issues = $issuesQuery->paginate(1000); // Adjust pagination as needed
 
     // Pass data to the Inertia view
     return Inertia::render('issue/index', [
         'issues' => $issues,
+        'issue_types' => $issue_types,
     ]);
 }
 
@@ -92,14 +96,16 @@ class IssueController extends Controller
             }
             // Define the default owners for each issue type
             
-            $owners = [
-                'it_application' => 3,
-                'warehouse_operations' => 4,
-                'safety' => 5,
-                'it_hardware' => 3,
-                'product_quality' => 4,
-            ];
-            $ownerId = $owners[$request->type] ?? 1; 
+            // $owners = [
+            //     'it_application' => 1,
+            //     'warehouse_operations' => 1,
+            //     'safety' => 1,
+            //     'it_hardware' => 1,
+            //     'product_quality' => 1,
+            // ];
+            $ownerForCategory = IssueCategory::where('name', $request->type)->value('user_id');
+          
+            $ownerId = $ownerForCategory ?? 1; 
             // If no ID, create a new issue
             $issue = Issue::create([
                 'type' => $request->type,

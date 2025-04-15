@@ -42,13 +42,28 @@ const IssueForm = ({ issue, loggedIn }:  IssueFormProps) => {
     email: "",
   });
 
-  const issueTypes = [
-    { value: "product_quality", label: "Product Quality" },
-    { value: "it_hardware", label: "IT Hardware" },
-    { value: "it_application", label: "IT Applications" },
-    { value: "warehouse_operations", label: "Warehouse Operations" },
-    { value: "safety", label: "Safety" },
-  ];
+  const [issueTypes, setIssueTypes] = useState<{ value: string; label: string }[]>([]);
+
+useEffect(() => {
+  const fetchIssueTypes = async () => {
+    try {
+      const response = await fetch(route("issue-categories.retrieve"));
+      const data = await response.json();
+
+      // Assuming API returns: [{ id, name }]
+      const formatted = data.map((cat: { id: number; name: string }) => ({
+        value: cat.name,
+        label: cat.name,
+      }));
+
+      setIssueTypes(formatted);
+    } catch (error) {
+      console.error("Failed to load issue types:", error);
+    }
+  };
+
+  fetchIssueTypes();
+}, []);
 
   const priorityOptions = [
     { value: "critical", label: "Critical" },
