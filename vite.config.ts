@@ -13,7 +13,7 @@ export default defineConfig({
           'app/Http/Requests/**/*.php',
           'routes/**/*.php'
       ],
-      command: 'npm run generate-types',
+      command: 'echo "No command to run"', // A harmless command
     }),
     laravel({
       input: 'inertia/app.tsx',
