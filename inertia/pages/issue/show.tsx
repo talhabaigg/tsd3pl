@@ -6,6 +6,7 @@ import {
   CardTitle,
   CardDescription,
   CardHeader,
+  CardFooter,
 } from "~/components/ui/card";
 import { Archive } from 'lucide-react';
 import { Head, useForm } from "@inertiajs/react";
@@ -48,25 +49,7 @@ export default function Show({ issue }) {
           <CardHeader>
             <CardTitle>{issue.title}</CardTitle>
             <CardDescription>
-              <Dialog open={open} onOpenChange={setOpen}>
-                <DialogTrigger asChild>
-                  <Button variant="destructive" size="sm"> <Archive />Archive</Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Archive Issue</DialogTitle>
-                    <DialogDescription>
-                      Are you sure you want to archive this issue? This action cannot be undone.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <DialogFooter className="flex flex-row justify-between">
-                    <Button variant="secondary" className="p-2 m-1 w-1/2" onClick={() => setOpen(false)}>Cancel</Button>
-                    <Button variant="destructive" className="p-2 m-1 w-1/2" onClick={handleDelete} disabled={processing}>
-                      {processing ? "Archiving..." : "Confirm"}
-                    </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+             
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -108,7 +91,27 @@ export default function Show({ issue }) {
                 </TableRow>
               </TableBody>
             </Table>
+            
           </CardContent>
+          <CardFooter><Dialog open={open} onOpenChange={setOpen}>
+                <DialogTrigger asChild className="ml-auto">
+                  <Button variant="destructive" size="sm"> <Archive />Archive</Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Archive Issue</DialogTitle>
+                    <DialogDescription>
+                      Are you sure you want to archive this issue? This action cannot be undone.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter className="flex flex-row justify-between">
+                    <Button variant="secondary" className="p-2 m-1 w-1/2" onClick={() => setOpen(false)}>Cancel</Button>
+                    <Button variant="destructive" className="p-2 m-1 w-1/2" onClick={handleDelete} disabled={processing}>
+                      {processing ? "Archiving..." : "Confirm"}
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog></CardFooter>
         </Card>
         <Card className="col-span-2">
           <CardHeader>Comments</CardHeader>

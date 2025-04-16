@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { AgGridReact } from "ag-grid-react";
-import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS
-import "ag-grid-community/styles/ag-theme-alpine.css"; // Optional Theme
-import "ag-grid-community/styles/ag-theme-quartz.css";
-import "~/css/custom-ag-grid-theme.css"; // Import your custom theme
+// import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS
+// import "ag-grid-community/styles/ag-theme-alpine.css"; // Optional Theme
+// import "ag-grid-community/styles/ag-theme-quartz.css";
+// import "~/css/custom-ag-grid-theme.css"; // Import your custom theme
 import { ColDef } from "ag-grid-community";
 import { ComboboxEditor } from "~/components/user-select-cell-editor";
 import { toast } from "sonner";
@@ -15,7 +15,40 @@ import TypeCellRenderer from "./cell-renderers/type-cell-renderer";
 import PriorityCellRenderer from "./cell-renderers/priority-cell-renderer";
 import CreatedAtCellRenderer from "./cell-renderers/created-at-cell-renderer";
 import DueDateCellRenderer from "./cell-renderers/due-date-cell-renderer";
+import { themeQuartz } from 'ag-grid-community';
+import { themeAlpine } from "ag-grid-community"; 
 
+// to use myTheme in an application, pass it to the theme grid option
+const darkTheme = themeQuartz
+	.withParams({
+        accentColor: "#008B80",
+        backgroundColor: "#020000",
+        browserColorScheme: "inherit",
+        cellHorizontalPaddingScale: 1,
+        cellTextColor: "#FFFFFF",
+        chromeBackgroundColor: "#00000000",
+        fontFamily: "inherit",
+        foregroundColor: "#FFF",
+        headerBackgroundColor: "#002A26",
+        headerFontFamily: [
+            "-apple-system",
+            "BlinkMacSystemFont",
+            "Segoe UI",
+            "Roboto",
+            "Oxygen-Sans",
+            "Ubuntu",
+            "Cantarell",
+            "Helvetica Neue",
+            "sans-serif"
+        ],
+        headerFontSize: 14,
+        headerFontWeight: 500,
+        headerTextColor: "#FFFFFF",
+        headerVerticalPaddingScale: 1,
+        oddRowBackgroundColor: "#060606",
+        rowVerticalPaddingScale: 1
+    });
+    
 interface Issue {
   id: number;
   type: string;
@@ -44,7 +77,7 @@ interface IssueTableProps {
 
 const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmin }) => {
   const [selectedRow, setSelectedRow] = useState<{ id: number } | null>(null);
-
+  const appliedTheme = mode ? darkTheme : themeAlpine;
   // console.log("mode", mode);
 
   const form = useForm({
@@ -300,7 +333,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
       style={{ height: 750, width: "100%" }}
     >
       <AgGridReact
-      
+       theme={appliedTheme}
         suppressAutoSize={true}
         columnDefs={columnDefs}
         rowData={rowData}

@@ -18,7 +18,7 @@ const IdCellRenderer = ({ value, data }: any) => (
             href={route("issue.show", data.id)} // Link to the issue details page
             className=" hover:underline"
           >
-            <Button size="sm" variant="outline" className="p-2">
+            <Button size="sm" variant="secondary"  className="p-2">
               Open Issue
             </Button>
           </Link>

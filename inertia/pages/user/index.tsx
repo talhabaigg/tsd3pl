@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { AgGridReact } from "ag-grid-react";
-import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS
-import "ag-grid-community/styles/ag-theme-alpine.css"; // Optional Theme
-import "ag-grid-community/styles/ag-theme-quartz.css";
-import "~/css/custom-ag-grid-theme.css"; // Import your custom theme
+
 import { ColDef } from "ag-grid-community";
 import AuthenticatedLayout from "~/components/layouts/authenticated-layout";
 import { Head, Link } from "@inertiajs/react";
 import { useForm } from "@inertiajs/react";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
+import { themeQuartz } from 'ag-grid-community';
+import { themeAlpine } from "ag-grid-community"; 
 interface Role {
   name: string;
 }
@@ -27,15 +26,59 @@ interface UserTableProps {
   users: User[];
   roles: any; // Adjust the type of roles based on how you pass them
 }
-
+const darkTheme = themeQuartz
+	.withParams({
+        accentColor: "#008B80",
+        backgroundColor: "#020000",
+        browserColorScheme: "inherit",
+        cellHorizontalPaddingScale: 1,
+        cellTextColor: "#FFFFFF",
+        chromeBackgroundColor: "#00000000",
+        fontFamily: "inherit",
+        foregroundColor: "#FFF",
+        headerBackgroundColor: "#002A26",
+        headerFontFamily: [
+            "-apple-system",
+            "BlinkMacSystemFont",
+            "Segoe UI",
+            "Roboto",
+            "Oxygen-Sans",
+            "Ubuntu",
+            "Cantarell",
+            "Helvetica Neue",
+            "sans-serif"
+        ],
+        headerFontSize: 14,
+        headerFontWeight: 500,
+        headerTextColor: "#FFFFFF",
+        headerVerticalPaddingScale: 1,
+        oddRowBackgroundColor: "#060606",
+        rowVerticalPaddingScale: 1
+    });
 const UsersTable: React.FC<UserTableProps> = ({ users, roles }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    setIsDarkMode(savedTheme === "dark");
+    const detectTheme = () => {
+      const savedTheme = localStorage.getItem("theme");
+      setIsDarkMode(savedTheme === "dark");
+    };
+  
+    detectTheme(); // initial check
+  
+    const observer = new MutationObserver(() => {
+      detectTheme(); // re-check theme when class changes
+    });
+  
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"], // watch changes to the HTML class (used by Tailwind or theme togglers)
+    });
+  
+    return () => observer.disconnect(); // cleanup
   }, []);
-
+  
+const appliedTheme = isDarkMode ? darkTheme : themeAlpine;
   const form = useForm({
     id: 0,
     role: "",
@@ -107,15 +150,17 @@ const UsersTable: React.FC<UserTableProps> = ({ users, roles }) => {
         style={{ height: 750, width: "100%" }}
       >
         <AgGridReact
-          suppressAutoSize={true}
-          columnDefs={columnDefs}
-          rowData={rowData}
-          pagination={false}
-          defaultColDef={{
-            flex: 4,
-            resizable: false, // Allow resizing columns
-          }}
-        />
+  key={isDarkMode ? 'dark' : 'light'} // This forces full remount on theme change
+  theme={appliedTheme}
+  suppressAutoSize={true}
+  columnDefs={columnDefs}
+  rowData={rowData}
+  pagination={false}
+  defaultColDef={{
+    flex: 4,
+    resizable: false,
+  }}
+/>
       </div>
     </AuthenticatedLayout>
   );
