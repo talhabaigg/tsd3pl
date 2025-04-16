@@ -23,6 +23,8 @@ class Issue extends Model
         'owner_id',
         'updated_by',
         'due_date',
+        'downtime_start_time',
+        'downtime_end_time',
     ];
 
 

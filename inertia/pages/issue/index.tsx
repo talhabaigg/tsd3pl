@@ -49,6 +49,8 @@ interface Issue {
   comments: string;
   activities: any[];
   assignee: { name: string };
+  downtime_start_time: string;
+  downtime_end_time: string;
 }
 
 interface IssuesProps {
@@ -171,6 +173,8 @@ export default function Dashboard() {
     updated_at: issue.updated_at,
     creator: issue.creator,
     updater: issue.updater,
+    downtime_start_time: issue.downtime_start_time,
+    downtime_end_time: issue.downtime_end_time,
   });
 
   const taskHandlers = {

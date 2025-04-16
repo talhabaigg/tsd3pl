@@ -42,7 +42,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/issue-categories', [IssueCategoryController::class, 'store'])->name('issue-categories.store');
         Route::put('/issue-categories/{issueCategory}', [IssueCategoryController::class, 'update'])->name('issue-categories.update');
         Route::delete('/issue-categories/{issueCategory}', [IssueCategoryController::class, 'destroy'])->name('issue-categories.destroy');
-
+        Route::put('/issues/{issue}/start-downtime', [IssueController::class, 'startDowntime']);
     });
 });
     

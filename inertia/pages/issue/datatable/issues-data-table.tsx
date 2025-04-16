@@ -17,6 +17,7 @@ import CreatedAtCellRenderer from "./cell-renderers/created-at-cell-renderer";
 import DueDateCellRenderer from "./cell-renderers/due-date-cell-renderer";
 import { themeQuartz } from 'ag-grid-community';
 import { themeAlpine } from "ag-grid-community"; 
+import DownTimeTracker from "./cell-renderers/downtime-tracker";
 
 // to use myTheme in an application, pass it to the theme grid option
 const darkTheme = themeQuartz
@@ -79,7 +80,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
   const [selectedRow, setSelectedRow] = useState<{ id: number } | null>(null);
   const appliedTheme = mode ? darkTheme : themeAlpine;
   // console.log("mode", mode);
-
+  console.log(issues);
   const form = useForm({
     status: "",
     assigned_to: "",
@@ -130,6 +131,8 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
     // Update the selected row (optional, based on your app's logic)
     setSelectedRow({ id: issueId });
   };
+ 
+  
 
   // AG Grid column definitions
   const columnDefs: ColDef<Issue>[] = [
@@ -173,7 +176,13 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
         <IdCellRenderer value={params.value} data={params.data} />
       ),
     },
-    
+    {
+      headerName: "Lost Time",
+      field: "downtime_start_time",
+      cellRenderer: (params: any) => (
+        <DownTimeTracker value={params.value} data={params.data} />
+      ),
+    },
     {
       headerName: "Type",
       field: "type",
@@ -325,6 +334,8 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
     updated_at: issue.updated_at,
     creator: issue.creator,
     updater: issue.updater,
+    downtime_start_time: issue.downtime_start_time,
+    downtime_end_time: issue.downtime_end_time,
   }));
 
   return (
@@ -333,6 +344,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
       style={{ height: 750, width: "100%" }}
     >
       <AgGridReact
+       
        theme={appliedTheme}
         suppressAutoSize={true}
         columnDefs={columnDefs}
@@ -346,6 +358,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
           resizable: false, // Allow resizing columns
         }}
       />
+     
     </div>
   );
 };

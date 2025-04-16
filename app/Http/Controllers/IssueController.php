@@ -219,4 +219,29 @@ class IssueController extends Controller
 
         return;
     }
+    public function startDowntime(Issue $issue)
+{
+    if (is_null($issue->downtime_start_time)) {
+        // Start downtime
+        $issue->downtime_start_time = now();
+        $message = 'Downtime started.';
+    } elseif (is_null($issue->downtime_end_time)) {
+        // Stop downtime
+        $issue->downtime_end_time = now();
+        $message = 'Downtime stopped.';
+        log::info('Downtime stopped for issue ID: ' . $issue->id);
+    } else {
+        // Already started and stopped
+        return response()->json(['success' => false, 'message' => 'Downtime already ended.'], 400);
+    }
+
+    $issue->save();
+
+    return response()->json([
+        'success' => true,
+        'message' => $message,
+        'data' => $issue,
+    ]);
+}
+
 }
