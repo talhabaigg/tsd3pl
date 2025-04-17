@@ -65,13 +65,13 @@ export default function Welcome({
             )}
           </nav>
         </header>
-        <div className="relative flex flex-col items-center justify-center min-h-screen bg-black bg-opacity-50">
+        <div className="relative flex flex-col items-center justify-center min-h-screen bg-gray-50 ">
           <div className="relative w-full  ">
-            <main className="mt-6">
-              <div className="flex justify-center">
-                <div>
+            <main className="mt-6 ">
+              <div className="flex justify-center ">
+                <div className="w-[500px]">
                   {loading && (
-                    <div className="flex flex-col space-y-3 bg-gray-50 p-4 min-w-lg rounded-2xl shadow-2xl">
+                    <div className="flex flex-col space-y-3 bg-gray-50 p-4 min-w-lg rounded-2xl ">
                       <Skeleton className="h-6" />
                       <Skeleton className="h-6" />
                       <div className="space-y-2">
@@ -100,11 +100,11 @@ export default function Welcome({
                     </div>
                   )}
                   {!flash.success && !loading && (
-                    <div className="px-2 sm:px-0">
-                      <h2 className="text-white font-bold text-left text-2xl">
-                        REPORT ISSUE TO ROQ
+                    <div className="px-4 sm:px-0  ">
+                      <h2 className="text-black font-default   text-left text-lg">
+                        Submit a new issue to ROQ
                       </h2>
-                      <div className="bg-gray-50 p-4 rounded-2xl shadow-2xl ">
+                      <div className="bg-gray-50 dark:bg-gray-500  p-4 rounded-lg  ">
                         <IssueForm issue={null} loggedIn={isLoggedIn} />
                       </div>
                     </div>
@@ -113,7 +113,7 @@ export default function Welcome({
               </div>
             </main>
 
-            <footer className="py-16 text-center text-sm text-gray-200 dark:text-white/70">
+            <footer className="py-16 text-center text-sm text-gray-700 dark:text-white/70">
               By Telp. Built with React and Laravel v{laravelVersion} (PHP v
               {phpVersion})
             </footer>

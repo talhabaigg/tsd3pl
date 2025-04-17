@@ -93,7 +93,7 @@ useEffect(() => {
   };
 
   return (
-    <form onSubmit={submit} className="space-y-4">
+    <form onSubmit={submit} className="space-y-4 ">
       {/* Issue Type */}
       
       <div>
@@ -220,7 +220,7 @@ useEffect(() => {
           onChange={handleCheckboxChange}
         />
         <Label htmlFor="terms">
-        I confirm, this is a public company issue, not a confidential issue that should be handled with a manager.
+        Confirm submitting the issue to TSD ROQ
         </Label>
       </div>
 

@@ -1,11 +1,22 @@
 import React from 'react';
 
 const DueDateCellRenderer = ({ value }: { value: string | number | Date }) => {
+  // If the value is null or undefined, return "N/A"
+  if (value === null || value === undefined) {
+    return <div>Not Set</div>; // You can display a different fallback message here
+  }
+
+  // Create a date object from the value
   const date = new Date(value);
+
+  // Check if the date is invalid
+  if (isNaN(date.getTime())) {
+    return <div>N/A</div>; // Or a fallback message like "No Due Date"
+  }
 
   // Get the current date
   const currentDate = new Date();
-  
+
   // Get the date 7 days in the future
   const futureDate = new Date();
   futureDate.setDate(currentDate.getDate() + 7);
