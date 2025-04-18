@@ -15,41 +15,41 @@ import TypeCellRenderer from "./cell-renderers/type-cell-renderer";
 import PriorityCellRenderer from "./cell-renderers/priority-cell-renderer";
 import CreatedAtCellRenderer from "./cell-renderers/created-at-cell-renderer";
 import DueDateCellRenderer from "./cell-renderers/due-date-cell-renderer";
-import { themeQuartz } from 'ag-grid-community';
-import { themeAlpine } from "ag-grid-community"; 
+import { themeQuartz } from "ag-grid-community";
+import { themeAlpine } from "ag-grid-community";
 import DownTimeTracker from "./cell-renderers/downtime-tracker";
+import { useRef, useCallback } from "react";
 
 // to use myTheme in an application, pass it to the theme grid option
-const darkTheme = themeQuartz
-	.withParams({
-        accentColor: "#008B80",
-        backgroundColor: "#020000",
-        browserColorScheme: "inherit",
-        cellHorizontalPaddingScale: 1,
-        cellTextColor: "#FFFFFF",
-        chromeBackgroundColor: "#00000000",
-        fontFamily: "inherit",
-        foregroundColor: "#FFF",
-        headerBackgroundColor: "#002A26",
-        headerFontFamily: [
-            "-apple-system",
-            "BlinkMacSystemFont",
-            "Segoe UI",
-            "Roboto",
-            "Oxygen-Sans",
-            "Ubuntu",
-            "Cantarell",
-            "Helvetica Neue",
-            "sans-serif"
-        ],
-        headerFontSize: 14,
-        headerFontWeight: 500,
-        headerTextColor: "#FFFFFF",
-        headerVerticalPaddingScale: 1,
-        oddRowBackgroundColor: "#060606",
-        rowVerticalPaddingScale: 1
-    });
-    
+const darkTheme = themeQuartz.withParams({
+  accentColor: "#008B80",
+  backgroundColor: "#020000",
+  browserColorScheme: "inherit",
+  cellHorizontalPaddingScale: 1,
+  cellTextColor: "#FFFFFF",
+  chromeBackgroundColor: "#00000000",
+  fontFamily: "inherit",
+  foregroundColor: "#FFF",
+  headerBackgroundColor: "#002A26",
+  headerFontFamily: [
+    "-apple-system",
+    "BlinkMacSystemFont",
+    "Segoe UI",
+    "Roboto",
+    "Oxygen-Sans",
+    "Ubuntu",
+    "Cantarell",
+    "Helvetica Neue",
+    "sans-serif",
+  ],
+  headerFontSize: 14,
+  headerFontWeight: 500,
+  headerTextColor: "#FFFFFF",
+  headerVerticalPaddingScale: 1,
+  oddRowBackgroundColor: "#060606",
+  rowVerticalPaddingScale: 1,
+});
+
 interface Issue {
   id: number;
   type: string;
@@ -76,11 +76,15 @@ interface IssueTableProps {
   isAdmin: boolean;
 }
 
-const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmin }) => {
+const IssueTable: React.FC<IssueTableProps> = ({
+  issues,
+  onOpenRow,
+  mode,
+  isAdmin,
+}) => {
   const [selectedRow, setSelectedRow] = useState<{ id: number } | null>(null);
   const appliedTheme = mode ? darkTheme : themeAlpine;
   // console.log("mode", mode);
-  console.log(issues);
   const form = useForm({
     status: "",
     assigned_to: "",
@@ -106,13 +110,13 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
   }, [form.data.status, selectedRow]);
 
   const handleStatusChange = (
-      issueId: number,
-      newStatus?: string,
-      newAssignee?: string,
-      newPriority?: string,
-      newTitle?: string,
-      newDueDate?: string,
-    ) => {
+    issueId: number,
+    newStatus?: string,
+    newAssignee?: string,
+    newPriority?: string,
+    newTitle?: string,
+    newDueDate?: string,
+  ) => {
     // Set form data for both status and assigned_to
     // @ts-ignore
     form.setData({
@@ -131,11 +135,9 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
     // Update the selected row (optional, based on your app's logic)
     setSelectedRow({ id: issueId });
   };
- 
-  
 
   // AG Grid column definitions
-  const columnDefs: ColDef<Issue>[] = [
+  const [columnDefs, setColumnDefs] = useState<ColDef[]>([
     // {
     //   headerName: "ID",
     //   field: "id",
@@ -153,15 +155,15 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
       headerName: "Name",
       field: "title",
       flex: 8,
-      resizable: false,
+      resizable: true,
       autoHeight: true,
       editable: isAdmin,
       cellClass: "font-bold",
       hide: false,
-      minWidth: 700,
+
       singleClickEdit: true,
       wrapText: true,
-      
+
       onCellValueChanged: (event: any) => {
         const issueId = event.data.id; // Get the issue ID
         const newTitle = event.newValue; // Get the new title
@@ -171,6 +173,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
     {
       headerName: "Action",
       hide: false,
+      resizable: true,
       maxWidth: 120,
       cellRenderer: (params: any) => (
         <IdCellRenderer value={params.value} data={params.data} />
@@ -241,14 +244,21 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
       cellClass: "text-left",
       singleClickEdit: true,
       cellEditor: "agDateCellEditor",
-      cellDataType: 'date',
+      cellDataType: "date",
       cellRenderer: DueDateCellRenderer,
       onCellValueChanged: (event: { data: { id: any }; newValue: any }) => {
         const issueId = event.data.id; // Get the issue ID
         const newDueDate = event.newValue; // Get the new due date
 
-        handleStatusChange(issueId, undefined, undefined, undefined, undefined, newDueDate);
-      }
+        handleStatusChange(
+          issueId,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          newDueDate,
+        );
+      },
     },
     {
       headerName: "Owner",
@@ -313,7 +323,7 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
 
       cellRenderer: CreatedAtCellRenderer,
     },
-  ];
+  ]);
 
   const rowData = issues.map((issue) => ({
     id: issue.id,
@@ -337,6 +347,26 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
     downtime_start_time: issue.downtime_start_time,
     downtime_end_time: issue.downtime_end_time,
   }));
+  const gridRef = useRef(null);
+
+  const onGridReady = useCallback(() => {
+    const savedState = window.localStorage.getItem("gridState");
+    window.colState = savedState
+      ? JSON.parse(savedState)
+      : gridRef.current!.api.getColumnState();
+
+    gridRef.current!.api.applyColumnState({
+      state: window.colState,
+      applyOrder: true,
+    });
+  }, []);
+
+  const saveMovedState = useCallback(() => {
+    if (gridRef.current) {
+      window.colState = gridRef.current.api.getColumnState();
+      window.localStorage.setItem("gridState", JSON.stringify(window.colState));
+    }
+  }, []);
 
   return (
     <div
@@ -344,21 +374,17 @@ const IssueTable: React.FC<IssueTableProps> = ({ issues, onOpenRow, mode, isAdmi
       style={{ height: 750, width: "100%" }}
     >
       <AgGridReact
-       
-       theme={appliedTheme}
+        ref={gridRef}
+        theme={appliedTheme}
         suppressAutoSize={true}
         columnDefs={columnDefs}
         rowData={rowData}
         pagination={true}
         paginationPageSize={20}
-        defaultColDef={{
-          minWidth: 150,
-          flex: 4,
-          hide: window.innerWidth <= 768,
-          resizable: false, // Allow resizing columns
-        }}
+        onGridReady={onGridReady}
+        onColumnMoved={saveMovedState}
+        onColumnResized={saveMovedState}
       />
-     
     </div>
   );
 };

@@ -61,7 +61,6 @@ interface IssuesProps {
 
 export default function Dashboard() {
   const { issues, auth, issue_types } = usePage().props;
-  console.log(issue_types);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [selectedRow, setSelectedRow] = useState<Issue | null>(null);
   const [open, setOpen] = React.useState(false);
