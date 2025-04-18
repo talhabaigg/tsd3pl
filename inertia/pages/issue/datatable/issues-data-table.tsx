@@ -19,36 +19,9 @@ import { themeQuartz } from "ag-grid-community";
 import { themeAlpine } from "ag-grid-community";
 import DownTimeTracker from "./cell-renderers/downtime-tracker";
 import { useRef, useCallback } from "react";
-
+import { getIssueColumnDefs } from "./issue-table-col-defs";
+import { darkTheme } from "~/themes/darktheme";
 // to use myTheme in an application, pass it to the theme grid option
-const darkTheme = themeQuartz.withParams({
-  accentColor: "#008B80",
-  backgroundColor: "#020000",
-  browserColorScheme: "inherit",
-  cellHorizontalPaddingScale: 1,
-  cellTextColor: "#FFFFFF",
-  chromeBackgroundColor: "#00000000",
-  fontFamily: "inherit",
-  foregroundColor: "#FFF",
-  headerBackgroundColor: "#002A26",
-  headerFontFamily: [
-    "-apple-system",
-    "BlinkMacSystemFont",
-    "Segoe UI",
-    "Roboto",
-    "Oxygen-Sans",
-    "Ubuntu",
-    "Cantarell",
-    "Helvetica Neue",
-    "sans-serif",
-  ],
-  headerFontSize: 14,
-  headerFontWeight: 500,
-  headerTextColor: "#FFFFFF",
-  headerVerticalPaddingScale: 1,
-  oddRowBackgroundColor: "#060606",
-  rowVerticalPaddingScale: 1,
-});
 
 interface Issue {
   id: number;
@@ -117,18 +90,11 @@ const IssueTable: React.FC<IssueTableProps> = ({
     newTitle?: string,
     newDueDate?: string,
   ) => {
-    // Set form data for both status and assigned_to
-    // @ts-ignore
     form.setData({
-      // @ts-ignore
       status: newStatus ?? rowData.status, // Update status
-      // @ts-ignore
       assigned_to: newAssignee ?? rowData.assigned_to, // Update assigned user
-      // @ts-ignore
       priority: newPriority ?? rowData.priority,
-      // @ts-ignore
       title: newTitle ?? rowData.title,
-      // @ts-ignore
       due_date: newDueDate ?? rowData.due_date,
     });
 
@@ -136,194 +102,9 @@ const IssueTable: React.FC<IssueTableProps> = ({
     setSelectedRow({ id: issueId });
   };
 
-  // AG Grid column definitions
-  const [columnDefs, setColumnDefs] = useState<ColDef[]>([
-    // {
-    //   headerName: "ID",
-    //   field: "id",
-    //   flex: 2,
-    //   filter: true,
-    //   cellRenderer: (params: any) => (
-    //     <IdCellRenderer
-    //       value={params.value}
-    //       data={params.data}
-    //       onOpenRow={onOpenRow}
-    //     />
-    //   ),
-    // },
-    {
-      headerName: "Name",
-      field: "title",
-      flex: 8,
-      resizable: true,
-      autoHeight: true,
-      editable: isAdmin,
-      cellClass: "font-bold",
-      hide: false,
-
-      singleClickEdit: true,
-      wrapText: true,
-
-      onCellValueChanged: (event: any) => {
-        const issueId = event.data.id; // Get the issue ID
-        const newTitle = event.newValue; // Get the new title
-        handleStatusChange(issueId, undefined, undefined, undefined, newTitle);
-      },
-    },
-    {
-      headerName: "Action",
-      hide: false,
-      resizable: true,
-      maxWidth: 120,
-      cellRenderer: (params: any) => (
-        <IdCellRenderer value={params.value} data={params.data} />
-      ),
-    },
-    {
-      headerName: "Lost Time",
-      field: "downtime_start_time",
-      cellRenderer: (params: any) => (
-        <DownTimeTracker value={params.value} data={params.data} />
-      ),
-    },
-    {
-      headerName: "Type",
-      field: "type",
-      filter: false,
-      cellClass: "text-left",
-      cellRenderer: TypeCellRenderer,
-    },
-    {
-      headerName: "Priority",
-      field: "priority",
-      filter: false,
-      editable: isAdmin,
-      cellClass: "text-left",
-      cellEditor: "agSelectCellEditor",
-      singleClickEdit: true,
-      cellEditorParams: {
-        values: ["critical", "normal"],
-      },
-      onCellValueChanged: (event: any) => {
-        const issueId = event.data.id; // Get the issue ID
-        // @ts-ignore
-        const status = rowData.status; // Get the new status
-        // @ts-ignore
-        const assigned_to = rowData.assigned_to;
-        const newPriority = event.newValue; // Get the new priority
-        handleStatusChange(issueId, status, assigned_to, newPriority);
-      },
-      cellRenderer: (params: { value: string }) => (
-        <PriorityCellRenderer value={params.value} />
-      ),
-    },
-    {
-      headerName: "Status",
-      field: "status",
-      hide: false,
-      filter: false,
-      editable: isAdmin,
-      cellClass: "text-left",
-      cellEditor: "agSelectCellEditor",
-      singleClickEdit: true,
-      cellEditorParams: {
-        values: ["active", "resolved", "pending"],
-      },
-      onCellValueChanged: (event: { data: { id: any }; newValue: any }) => {
-        const issueId = event.data.id; // Get the issue ID
-        const newStatus = event.newValue; // Get the new status
-
-        handleStatusChange(issueId, newStatus);
-      },
-      cellRenderer: (props: { value: string }) => <div>{props.value}</div>,
-    },
-    {
-      headerName: "Due date",
-      field: "due_date",
-      editable: isAdmin,
-      cellClass: "text-left",
-      singleClickEdit: true,
-      cellEditor: "agDateCellEditor",
-      cellDataType: "date",
-      cellRenderer: DueDateCellRenderer,
-      onCellValueChanged: (event: { data: { id: any }; newValue: any }) => {
-        const issueId = event.data.id; // Get the issue ID
-        const newDueDate = event.newValue; // Get the new due date
-
-        handleStatusChange(
-          issueId,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          newDueDate,
-        );
-      },
-    },
-    {
-      headerName: "Owner",
-      field: "owner_id",
-      cellClass: "text-center",
-      singleClickEdit: true,
-      editable: false,
-      hide: window.innerWidth <= 768,
-      cellEditor: ComboboxEditor,
-      onCellValueChanged: (event: {
-        data: { id: any; status: any };
-        newValue: any;
-      }) => {
-        const issueId = event.data.id; // Get the issue ID
-        const newAssignee = event.newValue; // Get the new assignee
-        const newStatus = event.data.status;
-        handleStatusChange(issueId, newStatus, newAssignee);
-      },
-      cellRenderer: (props: { value: string | undefined }) => (
-        <ExtendedAvatar userFullName={props.value} />
-      ),
-    },
-    {
-      headerName: "Assigned to",
-      field: "assigned_to",
-      cellClass: "text-center",
-      singleClickEdit: true,
-      hide: window.innerWidth <= 768,
-      editable: isAdmin,
-      cellEditor: ComboboxEditor,
-      onCellValueChanged: (event: {
-        data: { id: any; status: any };
-        newValue: any;
-      }) => {
-        const issueId = event.data.id; // Get the issue ID
-        const newAssignee = event.newValue; // Get the new assignee
-        const newStatus = event.data.status;
-        handleStatusChange(issueId, newStatus, newAssignee);
-      },
-      cellRenderer: (props: { value: string | undefined }) => (
-        <ExtendedAvatar userFullName={props.value} />
-      ),
-    },
-    {
-      headerName: "Created by",
-      // @ts-ignore
-      field: "created_by",
-      hide: window.innerWidth <= 768,
-      cellRenderer: (props: { value: string | undefined }) => (
-        <ExtendedAvatar userFullName={props.value} />
-      ),
-    },
-    {
-      headerName: "Created At",
-      field: "created_at",
-      hide: window.innerWidth <= 768,
-      cellRenderer: CreatedAtCellRenderer,
-    },
-    {
-      headerName: "Last update",
-      field: "updated_at",
-
-      cellRenderer: CreatedAtCellRenderer,
-    },
-  ]);
+  const [columnDefs, setColumnDefs] = useState<ColDef[]>(
+    getIssueColumnDefs({ isAdmin, onOpenRow, handleStatusChange }),
+  );
 
   const rowData = issues.map((issue) => ({
     id: issue.id,
@@ -357,6 +138,7 @@ const IssueTable: React.FC<IssueTableProps> = ({
 
     gridRef.current!.api.applyColumnState({
       state: window.colState,
+      applyOrder: true,
     });
   }, []);
 
