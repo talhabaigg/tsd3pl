@@ -26,8 +26,9 @@ interface Issue {
 interface IssueFormProps {
   issue: Issue | null;
   loggedIn: boolean; // Add this prop to indicate if the user is logged in
+  onSuccess?: () => void; // <-- add this prop
 }
-const IssueForm = ({ issue, loggedIn }:  IssueFormProps) => {
+const IssueForm = ({ issue, loggedIn, onSuccess }: IssueFormProps) => {
   // Determine if the form is in "edit" or "create" mode
   const isEditing = !!issue;
 
@@ -38,32 +39,34 @@ const IssueForm = ({ issue, loggedIn }:  IssueFormProps) => {
     priority: isEditing ? issue.priority : "",
     description: isEditing ? issue.description : "",
     file: isEditing ? issue.file : "", // No pre-filled attachments for editing (can handle as needed)
-     fullName: "",
+    fullName: "",
     email: "",
   });
 
-  const [issueTypes, setIssueTypes] = useState<{ value: string; label: string }[]>([]);
+  const [issueTypes, setIssueTypes] = useState<
+    { value: string; label: string }[]
+  >([]);
 
-useEffect(() => {
-  const fetchIssueTypes = async () => {
-    try {
-      const response = await fetch(route("issue-categories.retrieve"));
-      const data = await response.json();
+  useEffect(() => {
+    const fetchIssueTypes = async () => {
+      try {
+        const response = await fetch(route("issue-categories.retrieve"));
+        const data = await response.json();
 
-      // Assuming API returns: [{ id, name }]
-      const formatted = data.map((cat: { id: number; name: string }) => ({
-        value: cat.name,
-        label: cat.name,
-      }));
+        // Assuming API returns: [{ id, name }]
+        const formatted = data.map((cat: { id: number; name: string }) => ({
+          value: cat.name,
+          label: cat.name,
+        }));
 
-      setIssueTypes(formatted);
-    } catch (error) {
-      console.error("Failed to load issue types:", error);
-    }
-  };
+        setIssueTypes(formatted);
+      } catch (error) {
+        console.error("Failed to load issue types:", error);
+      }
+    };
 
-  fetchIssueTypes();
-}, []);
+    fetchIssueTypes();
+  }, []);
 
   const priorityOptions = [
     { value: "critical", label: "Critical" },
@@ -84,7 +87,9 @@ useEffect(() => {
       return;
     }
     post(route("issue.store"));
-    toast.success("Issue has been submitted.");
+    onSuccess?.();
+    // toast.success("Issue has been submitted.");
+
     // Use PUT for editing, POST for creating
   };
 
@@ -95,7 +100,7 @@ useEffect(() => {
   return (
     <form onSubmit={submit} className="space-y-4 ">
       {/* Issue Type */}
-      
+
       <div>
         <Label htmlFor="type">Issue Type</Label>
         <Select
@@ -179,8 +184,8 @@ useEffect(() => {
         />
         {errors.file && <div className="text-red-600">{errors.file}</div>}
       </div>
-{/* Display Full Name and Email if not logged in */}
-{!loggedIn && (
+      {/* Display Full Name and Email if not logged in */}
+      {!loggedIn && (
         <>
           <div>
             <Label htmlFor="fullName">Full Name</Label>
@@ -219,9 +224,7 @@ useEffect(() => {
           checked={isChecked}
           onChange={handleCheckboxChange}
         />
-        <Label htmlFor="terms">
-        Confirm submitting the issue to TSD ROQ
-        </Label>
+        <Label htmlFor="terms">Confirm submitting the issue to TSD ROQ</Label>
       </div>
 
       {/* Submit Button */}

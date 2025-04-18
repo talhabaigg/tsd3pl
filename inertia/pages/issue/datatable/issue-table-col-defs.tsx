@@ -1,13 +1,13 @@
 // components/tables/issue-column-defs.ts
 import { ColDef } from "ag-grid-community";
-import IdCellRenderer from "./cell-renderers/id-renderer";
+import OpenButtonRenderer from "./cell-renderers/open-button-renderer";
 import TypeCellRenderer from "./cell-renderers/type-cell-renderer";
 import PriorityCellRenderer from "./cell-renderers/priority-cell-renderer";
 import CreatedAtCellRenderer from "./cell-renderers/created-at-cell-renderer";
 import DueDateCellRenderer from "./cell-renderers/due-date-cell-renderer";
 import DownTimeTracker from "./cell-renderers/downtime-tracker";
 import ExtendedAvatar from "~/components/user-avatar-extended";
-import { ComboboxEditor } from "~/components/user-select-cell-editor";
+import { ComboboxEditor } from "./cell-renderers/user-select-cell-editor";
 
 interface GetIssueColumnDefsParams {
   isAdmin: boolean;
@@ -32,12 +32,11 @@ export const getIssueColumnDefs = ({
     field: "title",
     flex: 8,
     resizable: true,
-    autoHeight: true,
+    minWidth: 400,
     editable: isAdmin,
     cellClass: "font-bold",
     hide: false,
     singleClickEdit: true,
-    wrapText: true,
     onCellValueChanged: (event: any) => {
       const issueId = event.data.id;
       const newTitle = event.newValue;
@@ -47,15 +46,15 @@ export const getIssueColumnDefs = ({
   {
     headerName: "Action",
     hide: false,
-    resizable: true,
+    resizable: false,
+    minWidth: 120,
     maxWidth: 120,
-    cellRenderer: (params: any) => (
-      <IdCellRenderer value={params.value} data={params.data} />
-    ),
+    cellRenderer: (params: any) => <OpenButtonRenderer data={params.data} />,
   },
   {
     headerName: "Lost Time",
     field: "downtime_start_time",
+    minWidth: 120,
     cellRenderer: (params: any) => (
       <DownTimeTracker value={params.value} data={params.data} />
     ),
@@ -132,7 +131,6 @@ export const getIssueColumnDefs = ({
     headerName: "Owner",
     field: "owner_id",
     cellClass: "text-center",
-    singleClickEdit: true,
     editable: false,
     hide: window.innerWidth <= 768,
     cellEditor: ComboboxEditor,
@@ -149,7 +147,6 @@ export const getIssueColumnDefs = ({
   {
     headerName: "Assigned to",
     field: "assigned_to",
-    cellClass: "text-center",
     singleClickEdit: true,
     hide: window.innerWidth <= 768,
     editable: isAdmin,

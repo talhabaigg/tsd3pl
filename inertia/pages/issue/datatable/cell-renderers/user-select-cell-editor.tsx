@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { cn } from "../lib/utils";
-import { Button } from "./ui/button";
+import { cn } from "~/lib/utils";
+import { Button } from "~/components/ui/button";
 import ExtendedAvatar from "~/components/user-avatar-extended";
 import {
   Command,
@@ -11,8 +11,12 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "./ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+} from "~/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/components/ui/popover";
 // import { Avatar } from "./ui/avatar";
 
 // Combobox Editor Component

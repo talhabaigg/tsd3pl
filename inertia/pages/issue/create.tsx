@@ -11,7 +11,6 @@ import { Head } from "@inertiajs/react";
 import IssueForm from "~/components/issue-form";
 import { usePage } from "@inertiajs/react";
 export default function Dashboard() {
-  
   return (
     <AuthenticatedLayout>
       <Head title="Report an Issue" />
@@ -25,7 +24,7 @@ export default function Dashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <IssueForm loggedIn={loggedIn}/>
+            <IssueForm />
           </CardContent>
         </Card>
       </div>

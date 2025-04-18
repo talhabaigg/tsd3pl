@@ -2,10 +2,9 @@ import { useForm, usePage } from "@inertiajs/react";
 import AuthenticatedLayout from "~/components/layouts/authenticated-layout";
 import IssueTable from "~/pages/issue/datatable/issues-data-table";
 import IssueFormModal from "~/components/issue-form-modal";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { Tabs, TabsContent } from "~/components/ui/tabs";
 import { KanbanBoard } from "~/components/KanbanBoard";
 import { MultiSelect } from "~/components/multi-select";
-import { Cat, Dog, Fish, Rabbit, Turtle } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -17,19 +16,9 @@ import React, { useEffect, useState } from "react";
 import IssueFormQR from "~/components/issue-form-guest-qr";
 import { Task } from "~/components/TaskCard";
 import IssueSheetTabs from "./partials/sheet-tabs";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
-import { set } from "date-fns";
-import { match } from "assert";
+import SingleSelectIssueFilter from "./partials/select-issue-filter";
 
 interface Issue {
   id: number;
@@ -79,13 +68,6 @@ export default function Dashboard() {
     value: type.name,
     label: type.name,
   }));
-  // const typeList = [
-  //   { value: "it_hardware", label: "IT Hardware" },
-  //   { value: "product_quality", label: "Product Quality" },
-  //   { value: "it_applications", label: "IT Applications" },
-  //   { value: "warehouse_operations", label: "Warehouse Operations" },
-  //   { value: "safety", label: "Safety" },
-  // ];
   const statusList = [
     { value: "active", label: "Active" },
     { value: "pending", label: "Pending" },
@@ -170,8 +152,8 @@ export default function Dashboard() {
     comments: issue.comments,
     activities: issue.activities,
     assigned_to: issue.assignee?.name || "N/A",
-    created_by: issue.creator.name || "N/A",
-    updated_by: issue.updater.name || "N/A",
+    created_by: issue.creator?.name || "N/A",
+    updated_by: issue.updater?.name || "N/A",
     created_at: issue.created_at,
     updated_at: issue.updated_at,
     creator: issue.creator,
@@ -245,76 +227,41 @@ export default function Dashboard() {
               maxCount={2}
               className="col-span-1 sm:col-span-2"
             />
-            <Select
+            <SingleSelectIssueFilter
               value={selectedPriority}
               onValueChange={setSelectedPriority}
-            >
-              <SelectTrigger className="w-[250px] sm:w-[180px]">
-                <SelectValue placeholder="Filter by priority" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Priority</SelectLabel>
-                  <SelectItem value="critical">Critical</SelectItem>
-                  <SelectItem value="normal">Normal</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+              options={["critical", "normal"]} // Add your priority options here
+              placeholder="Filter by priority"
+              label="Priority"
+            />
 
-            <Select value={selectedCreator} onValueChange={setSelectedCreator}>
-              <SelectTrigger className="w-[250px] sm:w-[180px]">
-                <SelectValue placeholder="Filter by creator" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Creator</SelectLabel>
-                  {[
-                    ...new Set(issues.data.map((issue) => issue.creator.name)),
-                  ].map((creatorName, index) => (
-                    <SelectItem key={index} value={creatorName}>
-                      {creatorName}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <Select value={selectedOwner} onValueChange={setSelectedOwner}>
-              <SelectTrigger className="w-[250px] sm:w-[180px]">
-                <SelectValue placeholder="Filter by owner" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Owner</SelectLabel>
-                  {[
-                    ...new Set(issues.data.map((issue) => issue.owner.name)),
-                  ].map((ownerName, index) => (
-                    <SelectItem key={index} value={ownerName}>
-                      {ownerName}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <Select
+            <SingleSelectIssueFilter
+              value={selectedCreator}
+              onValueChange={setSelectedCreator}
+              options={[
+                ...new Set(issues.data.map((issue) => issue.creator.name)),
+              ]}
+              placeholder="Filter by creator"
+              label="Creator"
+            />
+            <SingleSelectIssueFilter
               value={selectedAssignee}
               onValueChange={setSelectedAssignee}
-            >
-              <SelectTrigger className="w-[250px] sm:w-[180px]">
-                <SelectValue placeholder="Filter by assigned" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Assigned</SelectLabel>
-                  {[
-                    ...new Set(issues.data.map((issue) => issue.assignee.name)),
-                  ].map((assigneeName, index) => (
-                    <SelectItem key={index} value={assigneeName}>
-                      {assigneeName}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+              options={[
+                ...new Set(issues.data.map((issue) => issue.assignee.name)),
+              ]}
+              placeholder="Filter by assigned"
+              label="Assigned"
+            />
+            <SingleSelectIssueFilter
+              value={selectedOwner}
+              onValueChange={setSelectedOwner}
+              options={[
+                ...new Set(issues.data.map((issue) => issue.owner.name)),
+              ]}
+              placeholder="Filter by owner"
+              label="Owner"
+            />
           </div>
 
           <div className="flex flex-col sm:flex-row  gap-2">

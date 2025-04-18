@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import ColoredBadge from "~/components/colored-badge";
 import ExtendedAvatar from "~/components/user-avatar-extended";
 import { useForm } from "@inertiajs/react";
-import IdCellRenderer from "./cell-renderers/id-renderer";
+import IdCellRenderer from "./cell-renderers/open-button-renderer";
 import TypeCellRenderer from "./cell-renderers/type-cell-renderer";
 import PriorityCellRenderer from "./cell-renderers/priority-cell-renderer";
 import CreatedAtCellRenderer from "./cell-renderers/created-at-cell-renderer";
