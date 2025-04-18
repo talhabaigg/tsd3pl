@@ -154,6 +154,10 @@ export default function Dashboard() {
     setSearchQuery(""); // Clear search query
     fetchIssues(); // Refetch issues to reset filters
   };
+  const resetArrangements = () => {
+    localStorage.removeItem("gridState");
+    window.location.reload();
+  };
   const rowData = (issue: Issue) => ({
     id: issue.id,
     type: issue.type,
@@ -328,6 +332,9 @@ export default function Dashboard() {
           />
           <Button variant="link" onClick={clearFilters}>
             Clear filters
+          </Button>
+          <Button variant="link" onClick={resetArrangements}>
+            Reset table
           </Button>
         </div>
         <TabsContent value="table" className="w-full">

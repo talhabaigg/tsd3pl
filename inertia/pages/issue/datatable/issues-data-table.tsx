@@ -357,7 +357,6 @@ const IssueTable: React.FC<IssueTableProps> = ({
 
     gridRef.current!.api.applyColumnState({
       state: window.colState,
-      applyOrder: true,
     });
   }, []);
 
