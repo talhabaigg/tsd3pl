@@ -5,7 +5,7 @@ import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { useEffect, useState } from "react";
 import { Skeleton } from "~/components/ui/skeleton";
 import ApplicationLogo from "~/components/application-logo";
-
+import { Button } from "~/components/ui/button";
 
 export default function Welcome({
   auth,
@@ -31,19 +31,16 @@ export default function Welcome({
   return (
     <>
       <Head title="Welcome" />
-      <div
-        className="relative min-h-screen bg-gray-900  text-black/50  "
-        
-      >
+      <div className="relative min-h-screen bg-gray-900 ">
         <header className="grid grid-cols-2 items-center gap-2 py-5 lg:grid-cols-3 bg-black px-6">
           <div className="flex lg:col-start-2 lg:justify-center ">
             <ApplicationLogo className="w-16 h-16" />
           </div>
-          <nav className="-mx-3 flex flex-1 justify-end space-x-3">
+          <nav className="-mx-3 flex flex-1 justify-end space-x-3 text-white">
             {auth.user ? (
               <Link
                 href={route("dashboard")}
-                className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                className="rounded-md px-3 py-2  text-gray-200 ring-1 ring-transparent transition hover:text-gray-300 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
               >
                 Dashboard
               </Link>

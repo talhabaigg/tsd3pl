@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Config;
 
 class BackupDatabase extends Command
 {
@@ -20,7 +21,7 @@ class BackupDatabase extends Command
      *
      * @var string
      */
-    protected $description = 'Backup SQLite database and upload to S3';
+    protected $description = 'Backup MySQL database and upload to S3';
 
     /**
      * Execute the console command.
@@ -29,19 +30,31 @@ class BackupDatabase extends Command
      */
     public function handle()
     {
-        // Define the SQLite database path
-        $dbPath = base_path('database/database.sqlite'); // Adjust this path if needed
-
-        // Generate the backup file name
         $date = Carbon::now()->format('Y-m-d_H-i-s');
-        $backupFileName = "db_backup_{$date}.sqlite";
-
-        // Copy the database to a temporary backup location
+        $backupFileName = "db_backup_{$date}.sql";
         $backupFilePath = storage_path("app/{$backupFileName}");
-        copy($dbPath, $backupFilePath);
 
-        // Upload the backup to S3
-        $uploaded = Storage::disk('s3')->put("backups/{$backupFileName}", fopen($backupFilePath, 'r+'));
+        $dbHost = config('database.connections.mysql.host');
+        $dbPort = config('database.connections.mysql.port');
+        $dbUser = config('database.connections.mysql.username');
+        $dbPass = config('database.connections.mysql.password');
+        $dbName = config('database.connections.mysql.database');
+
+        // Build the mysqldump command
+        $command = "mysqldump -h{$dbHost} -P{$dbPort} -u{$dbUser} -p\"{$dbPass}\" {$dbName} > {$backupFilePath}";
+
+        // Execute the command
+        $result = null;
+        $output = null;
+        exec($command, $output, $result);
+
+        if ($result !== 0) {
+            $this->error('Database backup failed.');
+            return;
+        }
+
+        // Upload to S3
+        $uploaded = Storage::disk('s3')->put("backups/{$backupFileName}", fopen($backupFilePath, 'r'));
 
         if ($uploaded) {
             $this->info('Database backup uploaded successfully to S3!');
@@ -49,7 +62,7 @@ class BackupDatabase extends Command
             $this->error('Failed to upload the backup to S3.');
         }
 
-        // Optionally, remove the local backup file after uploading
+        // Optionally delete the local copy
         unlink($backupFilePath);
     }
 }
