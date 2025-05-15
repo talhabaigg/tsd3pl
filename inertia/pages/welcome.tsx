@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Skeleton } from "~/components/ui/skeleton";
 import ApplicationLogo from "~/components/application-logo";
 import { Button } from "~/components/ui/button";
+import AppLogoIcon from "~/components/app-logo-icon";
 
 export default function Welcome({
   auth,
@@ -34,7 +35,9 @@ export default function Welcome({
       <div className="relative min-h-screen bg-gray-900 ">
         <header className="grid grid-cols-2 items-center gap-2 py-5 lg:grid-cols-3 bg-black px-6">
           <div className="flex lg:col-start-2 lg:justify-center ">
-            <ApplicationLogo />
+            <div className="w-48 ">
+              <AppLogoIcon />
+            </div>
           </div>
           <nav className="-mx-3 flex flex-1 justify-end space-x-3 text-white">
             {auth.user ? (
