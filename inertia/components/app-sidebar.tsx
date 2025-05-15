@@ -13,6 +13,7 @@ import { Link, usePage } from "@inertiajs/react";
 import { useToggle } from "@uidotdev/usehooks";
 import { NavUser } from "./nav-user";
 import { LayoutDashboard, Ticket } from "lucide-react";
+import AppLogo from "~/components/application-logo";
 export function AppSidebar() {
   const user = usePage().props.auth.user;
   const isLinkActive = (link: string) => {
@@ -21,21 +22,17 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar collapsible="icon" >
+    <Sidebar collapsible="icon">
       <SidebarHeader>
-      <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" className="flex justify-center" asChild>
-                          <Link href={route("dashboard")} >
-                          <div className="mr-2">
-                            <ApplicationLogo  />
-                          </div>
-                          
-                          </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-       
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg" asChild>
+              <Link href="/dashboard" prefetch>
+                <AppLogo />
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
       <SidebarContent className="px-2">
         {/* <SidebarMenuButton
@@ -62,7 +59,7 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu></SidebarMenu>
-        <NavUser user={user}/>
+        <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>
   );
