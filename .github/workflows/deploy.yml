@@ -28,7 +28,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
-            cd /var/www/tsdroq
+            cd /var/www/tsdroq.telp.com.au
             git pull origin main
             echo "Installing dependencies..."
             composer install --no-scripts --no-progress --prefer-dist
