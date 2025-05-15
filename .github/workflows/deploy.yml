@@ -31,16 +31,16 @@ jobs:
             cd /var/www/tsdroq.telp.com.au
             git pull origin main
             echo "Installing dependencies..."
-            composer install --no-scripts --no-progress --prefer-dist
+            sudo composer install --no-scripts --no-progress --prefer-dist
             echo "Running migrations..."
-            php artisan migrate --force
+            sudo php artisan migrate --force
             echo "Clearing and caching..."
-            php artisan cache:clear
-            php artisan config:cache
-            php artisan route:cache
-            php artisan view:cache
-            php artisan optimize
-            npm install --force
+            sudo php artisan cache:clear
+            sudo php artisan config:cache
+            sudo php artisan route:cache
+            sudo php artisan view:cache
+            sudo php artisan optimize
+            sudo npm install --force
             echo "Building assets..."
-            npm run build
+            sudo npm run build
             echo "Deployment complete."
