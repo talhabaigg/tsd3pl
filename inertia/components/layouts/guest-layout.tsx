@@ -2,6 +2,7 @@ import ApplicationLogo from "~/components/application-logo";
 import { Card, CardContent } from "~/components/ui/card";
 import { Link } from "@inertiajs/react";
 import { PropsWithChildren } from "react";
+import AppLogoIcon from "~/components/app-logo-icon";
 
 export default function Guest({ children }: PropsWithChildren) {
   return (
@@ -9,7 +10,7 @@ export default function Guest({ children }: PropsWithChildren) {
       <div className="w-full max-w-md mx-auto mt-24 space-y-4">
         <div className="flex justify-center">
           <Link href="/">
-            <ApplicationLogo className="h-20 w-20 fill-current text-foreground" />
+            <AppLogoIcon className="w-48" />
           </Link>
         </div>
 

@@ -30,7 +30,7 @@ class IssueCommentController extends Controller
             $newFilename = $uuid . '.' . $extension;
 
             // Store the file in S3 with public visibility
-            $filePath = Storage::disk('s3')->putFileAs('comments', $request->file('file'), $newFilename, 'public');
+           $filePath = Storage::disk('s3')->putFileAs('comments', $request->file('file'), $newFilename);
         }
 
         // Create the comment with the file path (if any)
