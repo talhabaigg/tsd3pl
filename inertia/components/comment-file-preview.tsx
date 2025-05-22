@@ -14,7 +14,10 @@ const FilePreview = ({ file }: { file: File | string }) => {
     const isFileObject = file instanceof File;
     const fileType = isFileObject
       ? file.type.split("/")[0]
-      : file.split(".").pop()?.toLowerCase();
+      : (() => {
+          const cleanUrl = typeof file === "string" ? file.split("?")[0] : "";
+          return cleanUrl.split(".").pop()?.toLowerCase();
+        })();
 
     // Common link to open the file
     const fileLink = (

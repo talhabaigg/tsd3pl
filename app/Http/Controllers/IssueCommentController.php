@@ -38,7 +38,7 @@ class IssueCommentController extends Controller
             'issue_id' => $validated['issue_id'],
             'user_id' => auth()->id(), // Assuming the user is logged in
             'text' => $validated['text'],
-            'file' => $filePath ? Storage::disk('s3')->url('comments/' . $newFilename) : null,
+            'file' => $filePath,
         ]);
         $issue = Issue::with('owner')->find($validated['issue_id']); // Ensure owner relation is loaded
         $commenterId = auth()->id();

@@ -119,20 +119,19 @@ class IssueController extends Controller
                 'updated_by' => $user->id,
             ]);
             
-            if ($request->hasFile('file')) {
+           if ($request->hasFile('file')) {
                 $file = $request->file('file');
-                $originalFilename = $file->getClientOriginalName(); // Get the original file name
-                $newFilename = 'issue_' . $issue->id . '_' . $originalFilename; // Add prefix
+                $originalFilename = $file->getClientOriginalName();
+                $newFilename = 'issue_' . $issue->id . '_' . $originalFilename;
 
-                // Upload file with public visibility
-                Storage::disk('s3')->put('issues/' . $newFilename, file_get_contents($file), 'public');
+                $path = 'issues/' . $newFilename;
 
-                // Get the URL of the uploaded file
-                $fileUrl = Storage::disk('s3')->url('issues/' . $newFilename);
+                // Upload file
+                Storage::disk('s3')->put($path, file_get_contents($file), 'public');
 
-                // Update the issue with the file path
+                // Save the path to the DB (or full URL if you prefer)
                 $issue->update([
-                    'file' => $fileUrl,
+                    'file' => $path, // OR use Storage::disk('s3')->url($path) for public access
                 ]);
             }
             if (!Auth::check()) {
@@ -158,6 +157,15 @@ class IssueController extends Controller
         )->findOrFail($id);
         // dd($issue);
 
+        if ($issue->file) {
+        $issue->file = Storage::disk('s3')->temporaryUrl($issue->file, now()->addMinutes(15));
+    }
+
+        $issue->comments->each(function ($comment) {
+        if (!empty($comment->file)) {
+            $comment->file = Storage::disk('s3')->temporaryUrl($comment->file, now()->addMinutes(15));
+        }
+    });
         return Inertia::render('issue/show', ['issue' => $issue]);
     }
 

@@ -7,6 +7,7 @@ import { useForm } from "@inertiajs/react";
 import { toast } from "sonner";
 import CommentList from "~/pages/issue/partials/comment-list";
 import { usePage } from "@inertiajs/react";
+import { Textarea } from "~/components/ui/textarea";
 
 interface IssueCommentBoxProps {
   issueId: number;
@@ -71,7 +72,7 @@ const IssueCommentBox = ({
       <div className="sticky top-0 pb-2 border-gray-200">
         <div className="flex flex-col gap-2">
           {/* Text Input for Comment */}
-          <Input
+          <Textarea
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Write a comment..."

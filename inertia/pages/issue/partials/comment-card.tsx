@@ -6,6 +6,7 @@ import { usePage, useForm } from "@inertiajs/react";
 import { formatDistanceToNow } from "date-fns";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
 type User = {
   id: number;
   name: string;
@@ -80,11 +81,14 @@ const CommentCard = ({ comment }: { comment: Comment }) => {
           {/* Edit or View Comment Text */}
           {isEditing ? (
             <div>
-              <Input  value={data.text}
+              <Textarea
+                value={data.text}
                 onChange={handleTextChange}
                 onKeyDown={handleKeyPress} // Bind the Enter key/>
-               />
-              {errors.text && <p className="text-red-500 text-sm">{errors.text}</p>}
+              />
+              {errors.text && (
+                <p className="text-red-500 text-sm">{errors.text}</p>
+              )}
               <div className="flex justify-end gap-2 mt-2">
                 <Button
                   onClick={() => setIsEditing(false)} // Cancel edit
@@ -92,9 +96,8 @@ const CommentCard = ({ comment }: { comment: Comment }) => {
                 >
                   Cancel
                 </Button>
-                <Button 
+                <Button
                   onClick={handleSave} // Save updated comment
-                  
                   disabled={processing}
                 >
                   {processing ? "Saving..." : "Save"}
@@ -117,7 +120,9 @@ const CommentCard = ({ comment }: { comment: Comment }) => {
       {/* Edit Button (only show if the user is the comment creator or has permission) */}
       {comment.creator.id === user?.id && !isEditing && (
         <div className="flex justify-end">
-          <Button  onClick={() => setIsEditing(true)} variant="link">Edit</Button>
+          <Button onClick={() => setIsEditing(true)} variant="link">
+            Edit
+          </Button>
         </div>
       )}
     </Card>

@@ -224,7 +224,7 @@ const IssueForm = ({ issue, loggedIn, onSuccess }: IssueFormProps) => {
           checked={isChecked}
           onChange={handleCheckboxChange}
         />
-        <Label htmlFor="terms">Confirm submitting the issue to TSD ROQ</Label>
+        <Label htmlFor="terms">Confirm submitting the issue to TSD 3PL</Label>
       </div>
 
       {/* Submit Button */}

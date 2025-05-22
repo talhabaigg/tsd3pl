@@ -102,7 +102,7 @@ export default function Welcome({
                   {!flash.success && !loading && (
                     <div className="px-4 sm:px-0  ">
                       <h2 className="text-black font-default   text-left text-lg">
-                        Submit a new issue to ROQ
+                        Submit a new issue to 3PL
                       </h2>
                       <div className="bg-gray-50 dark:bg-gray-500  p-4 rounded-lg  ">
                         <IssueForm issue={null} loggedIn={isLoggedIn} />
