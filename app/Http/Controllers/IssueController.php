@@ -120,14 +120,13 @@ class IssueController extends Controller
             ]);
             
            if ($request->hasFile('file')) {
+                // Handle file upload
                 $file = $request->file('file');
-                $originalFilename = $file->getClientOriginalName();
-                $newFilename = 'issue_' . $issue->id . '_' . $originalFilename;
-
-                $path = 'issues/' . $newFilename;
-
-                // Upload file
-                Storage::disk('s3')->put($path, file_get_contents($file), 'public');
+                $fileName = time() . '_' . $file->getClientOriginalName(); // Generate a unique file name
+                $path = Storage::disk('s3')->put('issues', $file); // Store file in S3
+                if (!$path) {
+                    return redirect()->back()->with('error', 'File upload failed.');
+                }
 
                 // Save the path to the DB (or full URL if you prefer)
                 $issue->update([
@@ -158,8 +157,8 @@ class IssueController extends Controller
         // dd($issue);
 
         if ($issue->file) {
-        $issue->file = Storage::disk('s3')->temporaryUrl($issue->file, now()->addMinutes(15));
-    }
+            $issue->file = Storage::disk('s3')->temporaryUrl($issue->file, now()->addMinutes(15));
+         }
 
         $issue->comments->each(function ($comment) {
         if (!empty($comment->file)) {
